@@ -9,6 +9,7 @@
 #include "../../../odlib/include/network_api/network_context.h"
 
 static inline void print_g_id_rob(context_t *ctx, uint32_t rob_id);
+static inline void print_all_gid_robs(context_t *ctx, bool show_entries);
 
 
 static inline bool gid_rob_is_empty(gid_rob_t *gid_rob)
@@ -26,7 +27,7 @@ static inline bool all_gid_robs_are_empty(dr_ctx_t *dr_ctx)
 }
 
 static inline gid_rob_t *get_g_id_rob_priv(context_t *ctx,
-                                          uint64_t g_id)
+                                           uint64_t g_id)
 {
   dr_ctx_t *dr_ctx = (dr_ctx_t *) ctx->appl_ctx;
   for (uint64_t  i = 0; i < GID_ROB_NUM; ++i) {
@@ -36,8 +37,10 @@ static inline gid_rob_t *get_g_id_rob_priv(context_t *ctx,
       return gid_rob;
     }
   }
-  if (ENABLE_ASSERTIONS)
+  if (ENABLE_ASSERTIONS) {
     my_printf(red, "Wrkr %u Trying to get gid rob for g_id %lu \n", ctx->t_id, g_id);
+    print_all_gid_robs(ctx, false);
+  }
   assert(false);
 }
 
@@ -207,13 +210,13 @@ static inline uint64_t get_g_id_from_l_id(uint64_t w_id, uint16_t t_id, uint8_t 
 
   uint32_t thread_offset = (uint32_t) ((m_id * PER_MACHINE_G_ID_BATCH) +
                                        (t_id * PER_THREAD_G_ID_BATCH));
-  uint32_t batch_id = (uint32_t) (w_id / PER_THREAD_G_ID_BATCH);
+  uint64_t batch_id = (uint64_t) (w_id / PER_THREAD_G_ID_BATCH);
 
   uint32_t fixed_offset = (uint32_t) TOTAL_G_ID_BATCH;
 
   uint32_t in_batch_offset = (uint32_t) (w_id % PER_THREAD_G_ID_BATCH);
 
-  return (fixed_offset * batch_id) + (thread_offset + in_batch_offset);
+  return (uint64_t) ((fixed_offset * batch_id) + (thread_offset + in_batch_offset));
 }
 
 static inline uint64_t assign_new_g_id(context_t *ctx)

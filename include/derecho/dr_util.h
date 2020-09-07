@@ -3,7 +3,7 @@
 //
 
 #include "dr_config.h"
-#include "../../../odlib/include/network_api/network_context.h"
+#include "network_context.h"
 #include "init_func.h"
 #include <dr_inline_util.h>
 #include <trace_util.h>
@@ -15,6 +15,8 @@ atomic_uint_fast64_t global_w_id, committed_global_w_id;
 
 static void dr_static_assert_compile_parameters()
 {
+
+  emphatic_print(green, "DERECHO");
   static_assert(PREP_SIZE == sizeof(dr_prepare_t));
   static_assert(PREP_SEND_SIZE == sizeof(dr_prep_mes_t));
 }
@@ -31,6 +33,7 @@ static void dr_init_functionality(int argc, char *argv[])
   generic_static_assert_compile_parameters();
   dr_static_assert_compile_parameters();
   generic_init_globals(QP_NUM);
+  dr_init_globals();
   handle_program_inputs(argc, argv);
 }
 
@@ -51,7 +54,7 @@ static void dr_qp_meta_mfs(context_t *ctx)
   //mfs[COMMIT_W_QP_ID].polling_debug = dr_debug_info_bookkeep;
   //
   //mfs[R_QP_ID].recv_handler = r_handler;
-  //mfs[R_QP_ID].send_helper = send_r_reps_helper;
+  mfs[ACK_QP_ID].send_helper = send_acks_helper;
   //mfs[R_QP_ID].recv_kvs = dr_KVS_batch_op_reads;
   //mfs[R_QP_ID].insert_helper = insert_r_rep_help;
   //mfs[R_QP_ID].polling_debug = dr_debug_info_bookkeep;

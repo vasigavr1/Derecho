@@ -45,7 +45,7 @@ static inline void dr_KVS_batch_op_trace(dr_ctx_t *dr_ctx, uint16_t op_num,
       assert(false);
     }
     if (op[op_i].opcode == KVS_OP_GET ) {
-      if (!USE_REMOTE_READS) {
+      if (!USE_LIN_READS) {
         KVS_local_read(kv_ptr[op_i], op[op_i].value_to_read, &resp[op_i].type, t_id);
       }
       else {

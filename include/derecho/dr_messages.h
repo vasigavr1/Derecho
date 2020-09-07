@@ -52,7 +52,7 @@ typedef struct dr_prep_message_ud_req {
 } dr_prep_mes_ud_t;
 
 
-#define COM_CREDITS 6
+#define COM_CREDITS 10
 #define COM_WRS MESSAGES_IN_BCAST_BATCH
 #define RECV_COM_WRS (REM_MACH_NUM * COM_CREDITS)
 #define COM_BUF_SLOTS RECV_COM_WRS

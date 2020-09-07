@@ -89,7 +89,7 @@ static inline void dr_batch_from_trace_to_KVS(context_t *ctx)
     // Local reads
     else if (resp[i].type == KVS_GET_SUCCESS) {
       if (ENABLE_ASSERTIONS) {
-        assert(USE_REMOTE_READS);
+        assert(USE_LIN_READS);
       }
       //ctx_insert_mes(ctx, R_QP_ID, R_SIZE, (uint32_t) R_REP_BIG_SIZE, false, NULL, NOT_USED);
     }
@@ -107,7 +107,10 @@ static inline void dr_batch_from_trace_to_KVS(context_t *ctx)
 ///* ---------------------------------------------------------------------------
 ////------------------------------UNICASTS -----------------------------
 ////---------------------------------------------------------------------------*/
-
+static inline void send_acks_helper(context_t *ctx)
+{
+  ctx_refill_recvs(ctx, COM_QP_ID);
+}
 
 ///* ---------------------------------------------------------------------------
 ////------------------------------ GID HANDLING -----------------------------
@@ -119,6 +122,7 @@ static inline void dr_propagate_updates(context_t *ctx)
   dr_ctx_t *dr_ctx = (dr_ctx_t *) ctx->appl_ctx;
 
   w_rob_t *ptrs_to_w_rob[DR_UPDATE_BATCH];
+  uint16_t sess_to_free[SESSIONS_PER_THREAD];
   uint16_t update_op_i = 0, local_op_i = 0;
   // remember the starting point to use it when writing the KVS
   uint64_t committed_g_id = atomic_load_explicit(&committed_global_w_id, memory_order_relaxed);
@@ -136,8 +140,8 @@ static inline void dr_propagate_updates(context_t *ctx)
     else {
       if (ENABLE_ASSERTIONS) dr_ctx->wait_for_gid_dbg_counter = 0;
       if (w_rob->is_local) {
-        //reset_loc_w_rob(dr_ctx, w_rob);
-        reset_dr_ctx_meta(ctx, w_rob); // TODO completion must be after KVS write?
+        if (ENABLE_ASSERTIONS) assert(local_op_i < SESSIONS_PER_THREAD);
+        sess_to_free[local_op_i] = w_rob->session_id;
         local_op_i++;
       }
       if (DEBUG_COMMITS)
@@ -155,13 +159,10 @@ static inline void dr_propagate_updates(context_t *ctx)
   }
 
   if (update_op_i > 0) {
-    if (local_op_i > 0) {
-      //ctx_insert_commit(ctx, COM_QP_ID, update_op_i, dr_ctx->committed_w_id);
-      //dr_ctx->committed_w_id += local_op_i;
-    }
-
     dr_KVS_batch_op_updates(ptrs_to_w_rob, update_op_i);
-    atomic_store_explicit(&committed_global_w_id, committed_g_id, memory_order_relaxed);
+    reset_dr_ctx_meta(ctx, sess_to_free, local_op_i);
+    atomic_store_explicit(&committed_global_w_id, committed_g_id,
+                          memory_order_relaxed);
   }
 }
 
@@ -241,7 +242,6 @@ static inline bool ack_handler(context_t *ctx)
 
   per_qp_meta_t *com_qp_meta = &ctx->qp_meta[COM_QP_ID];
   com_qp_meta->credits[ack->m_id] = com_qp_meta->max_credits;
-
 
 
   if ((dr_ctx->loc_w_rob_ptr->capacity == 0 ) ||
@@ -403,10 +403,6 @@ static inline void main_loop(context_t *ctx)
     ctx_poll_incoming_messages(ctx, PREP_QP_ID);
 
     ctx_send_acks(ctx, ACK_QP_ID);
-
-    ctx_refill_recvs(ctx, COM_QP_ID);
-
-
 
     ctx_poll_incoming_messages(ctx, ACK_QP_ID);
 

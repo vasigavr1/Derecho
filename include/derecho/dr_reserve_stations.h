@@ -133,7 +133,7 @@ static inline void dr_fill_trace_op(context_t *ctx,
 
 
   dr_ctx->stalled[working_session] =
-    (is_update) || (USE_REMOTE_READS);
+    (is_update) || (USE_LIN_READS);
 
   if (ENABLE_CLIENTS) {
     signal_in_progress_to_client(op->session_id, op->index_to_req_array, ctx->t_id);
@@ -149,15 +149,19 @@ static inline void dr_fill_trace_op(context_t *ctx,
 
 
 static inline void reset_dr_ctx_meta(context_t *ctx,
-                                     w_rob_t *w_rob)
+                                     uint16_t *sess_to_free,
+                                     uint16_t write_num)
 {
+  if (write_num == 0) return;
   dr_ctx_t *dr_ctx = (dr_ctx_t *) ctx->appl_ctx;
-  uint32_t sess_id = w_rob->session_id;
-  signal_completion_to_client(sess_id,
-                              dr_ctx->index_to_req_array[sess_id],
-                              ctx->t_id);
-  dr_ctx->stalled[sess_id] = false;
   dr_ctx->all_sessions_stalled = false;
+  for (int w_i = 0; w_i < write_num; ++w_i) {
+    uint16_t sess_id = sess_to_free[w_i];
+    signal_completion_to_client(sess_id,
+                                dr_ctx->index_to_req_array[sess_id],
+                                ctx->t_id);
+    dr_ctx->stalled[sess_id] = false;
+  }
 }
 
 

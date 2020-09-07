@@ -50,8 +50,7 @@ static inline void print_g_id_entry(context_t *ctx,
             dr_w_state_to_str(w_rob->w_state), w_rob->g_id);
 }
 
-
-static inline void print_g_id_rob(context_t *ctx, uint32_t rob_id)
+static inline void print_g_id_rob_no_entries(context_t *ctx, uint32_t rob_id)
 {
   assert(rob_id < GID_ROB_NUM);
   dr_ctx_t *dr_ctx = (dr_ctx_t *) ctx->appl_ctx;
@@ -61,16 +60,22 @@ static inline void print_g_id_rob(context_t *ctx, uint32_t rob_id)
             gid_rob->base_gid, gid_rob->base_gid + GID_ROB_SIZE,
             gid_rob->empty ? "EMPTY" : "NOT EMPTY");
   my_printf(cyan, "First valid %u\n", gid_rob->first_valid);
+}
+
+static inline void print_g_id_rob(context_t *ctx, uint32_t rob_id)
+{
+  print_g_id_rob_no_entries(ctx, rob_id);
   for (uint32_t i = 0; i < GID_ROB_SIZE; ++i) {
     print_g_id_entry(ctx, rob_id, i);
   }
 
 }
 
-static inline void print_all_gid_robs(context_t *ctx)
+static inline void print_all_gid_robs(context_t *ctx, bool show_entries)
 {
   for (uint32_t i = 0; i < GID_ROB_NUM; ++i) {
-    print_g_id_rob(ctx, i);
+    if (show_entries) print_g_id_rob(ctx, i);
+    else print_g_id_rob_no_entries(ctx, i);
   }
 }
 
