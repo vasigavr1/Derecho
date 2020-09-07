@@ -221,9 +221,9 @@ typedef struct thread_stats { // 2 cache lines
   uint64_t stalled_ack_prep;
   uint64_t stalled_com_credit;
   //long long unused[3]; // padding to avoid false sharing
-} thread_stats_t;
+} t_stats_t;
 
-extern thread_stats_t t_stats[WORKERS_PER_MACHINE];
+extern t_stats_t t_stats[WORKERS_PER_MACHINE];
 extern atomic_uint_fast64_t global_w_id, committed_global_w_id;
 
 #endif //ODYSSEY_DR_CONFIG_H

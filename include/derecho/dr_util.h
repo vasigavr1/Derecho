@@ -2,14 +2,14 @@
 // Created by vasilis on 20/08/20.
 //
 
+#ifndef ODYSSEY_DR_UTIL_H
+#define ODYSSEY_DR_UTIL_H
+
 #include "dr_config.h"
 #include "network_context.h"
 #include "init_func.h"
 #include <dr_inline_util.h>
 #include <trace_util.h>
-
-#ifndef ODYSSEY_DR_UTIL_H
-#define ODYSSEY_DR_UTIL_H
 
 atomic_uint_fast64_t global_w_id, committed_global_w_id;
 

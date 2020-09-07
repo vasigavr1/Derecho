@@ -2,7 +2,7 @@
 // Created by vasilis on 20/08/20.
 //
 
-#include "../../../odlib/include/network_api/network_context.h"
+#include "network_context.h"
 #include "dr_reserve_stations.h"
 #include "dr_kvs_util.h"
 
