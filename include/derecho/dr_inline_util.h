@@ -17,7 +17,7 @@
 static inline void dr_batch_from_trace_to_KVS(context_t *ctx)
 {
   dr_ctx_t *dr_ctx = (dr_ctx_t *) ctx->appl_ctx;
-  dr_trace_op_t *ops = dr_ctx->ops;
+  ctx_trace_op_t *ops = dr_ctx->ops;
   dr_resp_t *resp = dr_ctx->resp;
   trace_t *trace = dr_ctx->trace;
 
@@ -53,7 +53,10 @@ static inline void dr_batch_from_trace_to_KVS(context_t *ctx)
   /// main loop
   while (op_i < DR_TRACE_BATCH && !passed_over_all_sessions) {
 
-    dr_fill_trace_op(ctx, &trace[dr_ctx->trace_iter], &ops[op_i], working_session);
+    ctx_fill_trace_op(ctx, &trace[dr_ctx->trace_iter], &ops[op_i], working_session);
+    dr_ctx->stalled[working_session] =
+      (ops[op_i].opcode == KVS_OP_PUT) || (USE_LIN_READS);
+
     while (!pull_request_from_this_session(dr_ctx->stalled[working_session],
                                            (uint16_t) working_session, ctx->t_id)) {
 
@@ -85,13 +88,6 @@ static inline void dr_batch_from_trace_to_KVS(context_t *ctx)
                 ops[i].key.bkt, ops[i].key.server, ops[i].key.tag);
       assert(false);
       continue;
-    }
-    // Local reads
-    else if (resp[i].type == KVS_GET_SUCCESS) {
-      if (ENABLE_ASSERTIONS) {
-        assert(USE_LIN_READS);
-      }
-      //ctx_insert_mes(ctx, R_QP_ID, R_SIZE, (uint32_t) R_REP_BIG_SIZE, false, NULL, NOT_USED);
     }
     else if (resp[i].type == KVS_LOCAL_GET_SUCCESS) {
       signal_completion_to_client(ops[i].session_id, ops[i].index_to_req_array, ctx->t_id);

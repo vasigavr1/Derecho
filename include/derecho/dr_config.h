@@ -7,6 +7,7 @@
 
 #include <fifo.h>
 #include <dr_messages.h>
+#include <network_context.h>
 
 
 void dr_stats(stats_ctx_t *ctx);
@@ -66,18 +67,6 @@ struct mica_op {
 /*------------------------------------------------
  * ----------------TRACE----------------------------
  * ----------------------------------------------*/
-typedef struct dr_trace_op {
-  uint16_t session_id;
-  mica_key_t key;
-  uint8_t opcode;// if the opcode is 0, it has never been RMWed, if it's 1 it has
-  uint8_t val_len; // this represents the maximum value len
-  uint8_t value[VALUE_SIZE]; // if it's an RMW the first 4 bytes point to the entry
-  uint8_t *value_to_write;
-  uint8_t *value_to_read; //compare value for CAS/  addition argument for F&A
-  uint32_t index_to_req_array;
-  uint32_t real_val_len; // this is the value length the client is interested in
-} dr_trace_op_t;
-
 
 typedef struct dr_resp {
   uint8_t type;
@@ -159,7 +148,7 @@ typedef struct dr_ctx {
   uint32_t trace_iter;
   uint16_t last_session;
 
-  dr_trace_op_t *ops;
+  ctx_trace_op_t *ops;
   dr_resp_t *resp;
 
   //ptrs_to_r_t *ptrs_to_r;
@@ -196,7 +185,7 @@ typedef struct thread_stats { // 2 cache lines
   long long writes_sent;
   uint64_t reads_sent;
 
-  long long preps_sent_mes_num;
+  long long prep_sent_mes_num;
   long long acks_sent_mes_num;
   long long coms_sent_mes_num;
   long long writes_sent_mes_num;

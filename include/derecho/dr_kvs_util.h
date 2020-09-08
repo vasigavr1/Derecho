@@ -10,7 +10,7 @@
 static inline void dr_KVS_batch_op_trace(dr_ctx_t *dr_ctx, uint16_t op_num,
                                          uint16_t t_id)
 {
-  dr_trace_op_t *op = dr_ctx->ops;
+  ctx_trace_op_t *op = dr_ctx->ops;
   dr_resp_t *resp = dr_ctx->resp;
   uint16_t op_i;
   if (ENABLE_ASSERTIONS) {
@@ -35,15 +35,7 @@ static inline void dr_KVS_batch_op_trace(dr_ctx_t *dr_ctx, uint16_t op_num,
   //uint32_t r_push_ptr = dr_ctx->r_rob->push_ptr;
   // the following variables used to validate atomicity between a lock-free read of an object
   for(op_i = 0; op_i < op_num; op_i++) {
-    if (ENABLE_ASSERTIONS && kv_ptr[op_i] == NULL) assert(false);
-    bool key_found = memcmp(&kv_ptr[op_i]->key, &op[op_i].key, KEY_SIZE) == 0;
-    if (unlikely(ENABLE_ASSERTIONS && !key_found)) {
-      my_printf(red, "Kvs miss %u\n", op_i);
-      cust_print_key("Op", &op[op_i].key);
-      cust_print_key("KV_ptr", &kv_ptr[op_i]->key);
-      resp[op_i].type = KVS_MISS;
-      assert(false);
-    }
+    KVS_check_key(kv_ptr[op_i], op[op_i].key, op_i);
     if (op[op_i].opcode == KVS_OP_GET ) {
       if (!USE_LIN_READS) {
         KVS_local_read(kv_ptr[op_i], op[op_i].value_to_read, &resp[op_i].type, t_id);

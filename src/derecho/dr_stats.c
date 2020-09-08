@@ -42,8 +42,8 @@ void dr_stats(stats_ctx_t *ctx)
                                     (double) (curr_w_stats[i].coms_sent_mes_num -
                                               prev_w_stats[i].coms_sent_mes_num);
       all_stats.prep_batch_size[i] = (curr_w_stats[i].preps_sent - prev_w_stats[i].preps_sent) /
-                                     (double) (curr_w_stats[i].preps_sent_mes_num -
-                                               prev_w_stats[i].preps_sent_mes_num);
+                                     (double) (curr_w_stats[i].prep_sent_mes_num -
+                                               prev_w_stats[i].prep_sent_mes_num);
 
       all_stats.ack_batch_size[i] = (curr_w_stats[i].acks_sent - prev_w_stats[i].acks_sent) /
                                     (double) (curr_w_stats[i].acks_sent_mes_num -

@@ -19,6 +19,7 @@ static void dr_static_assert_compile_parameters()
   emphatic_print(green, "DERECHO");
   static_assert(PREP_SIZE == sizeof(dr_prepare_t));
   static_assert(PREP_SEND_SIZE == sizeof(dr_prep_mes_t));
+  static_assert(!USE_LIN_READS, "");
 }
 
 static void dr_init_globals()
@@ -139,7 +140,7 @@ static void* set_up_dr_ctx(context_t *ctx)
 
   dr_ctx->stalled = (bool *) malloc(SESSIONS_PER_THREAD * sizeof(bool));
 
-  dr_ctx->ops = (dr_trace_op_t *) calloc((size_t) DR_TRACE_BATCH, sizeof(dr_trace_op_t));
+  dr_ctx->ops = (ctx_trace_op_t *) calloc((size_t) DR_TRACE_BATCH, sizeof(ctx_trace_op_t));
   dr_ctx->resp = (dr_resp_t*) calloc((size_t) DR_TRACE_BATCH, sizeof(dr_resp_t));
   for(int i = 0; i <  DR_TRACE_BATCH; i++) dr_ctx->resp[i].type = EMPTY;
 

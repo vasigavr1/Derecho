@@ -16,7 +16,7 @@
 
 static inline void fill_prep(context_t *ctx,
                              dr_prepare_t *prep,
-                             dr_trace_op_t *op)
+                             ctx_trace_op_t *op)
 {
   prep->key = op->key;
   //prep->opcode = op->opcode;
@@ -74,7 +74,7 @@ static inline void insert_prep_help(context_t *ctx, void* prep_ptr,
   dr_ctx_t *dr_ctx = (dr_ctx_t *) ctx->appl_ctx;
 
   dr_prepare_t *prep = (dr_prepare_t *) prep_ptr;
-  dr_trace_op_t *op = (dr_trace_op_t *) source;
+  ctx_trace_op_t *op = (ctx_trace_op_t *) source;
   fill_prep(ctx, prep, op); /// this assigns the g_id
 
   slot_meta_t *slot_meta = get_fifo_slot_meta_push(send_fifo);
@@ -111,41 +111,6 @@ static inline void fill_dr_ctx_entry(context_t *ctx,
 }
 
 
-
-static inline void dr_fill_trace_op(context_t *ctx,
-                                    trace_t *trace_op,
-                                    dr_trace_op_t *op,
-                                    int working_session)
-{
-  dr_ctx_t *dr_ctx = (dr_ctx_t *) ctx->appl_ctx;
-  create_inputs_of_op(&op->value_to_write, &op->value_to_read, &op->real_val_len,
-                      &op->opcode, &op->index_to_req_array,
-                      &op->key, op->value, trace_op, working_session, ctx->t_id);
-
-  dr_check_op(op);
-
-  if (ENABLE_ASSERTIONS) assert(op->opcode != NOP);
-  bool is_update = op->opcode == KVS_OP_PUT;
-  if (WRITE_RATIO >= 1000) assert(is_update);
-  op->val_len = is_update ? (uint8_t) (VALUE_SIZE >> SHIFT_BITS) : (uint8_t) 0;
-
-  op->session_id = (uint16_t) working_session;
-
-
-  dr_ctx->stalled[working_session] =
-    (is_update) || (USE_LIN_READS);
-
-  if (ENABLE_CLIENTS) {
-    signal_in_progress_to_client(op->session_id, op->index_to_req_array, ctx->t_id);
-    if (ENABLE_ASSERTIONS) assert(interface[ctx->t_id].wrkr_pull_ptr[working_session] == op->index_to_req_array);
-    MOD_INCR(interface[ctx->t_id].wrkr_pull_ptr[working_session], PER_SESSION_REQ_NUM);
-  }
-
-  if (ENABLE_ASSERTIONS == 1) {
-    assert(WRITE_RATIO > 0 || is_update == 0);
-    if (is_update) assert(op->val_len > 0);
-  }
-}
 
 
 static inline void reset_dr_ctx_meta(context_t *ctx,

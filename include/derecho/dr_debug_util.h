@@ -88,17 +88,6 @@ static inline void print_gid_rob_with_gid(context_t *ctx,
 }
 
 
-static inline void dr_check_op(dr_trace_op_t *op)
-{
-  if (ENABLE_ASSERTIONS) {
-    check_state_with_allowed_flags(3, op->opcode, KVS_OP_PUT, KVS_OP_GET);
-    assert(op->real_val_len > 0);
-    assert(op->index_to_req_array < PER_SESSION_REQ_NUM);
-    assert(op->session_id < SESSIONS_PER_THREAD);
-    assert(op->key.bkt > 0);
-  }
-}
-
 static inline void dr_checks_and_stats_on_bcasting_prepares(context_t *ctx,
                                                             uint8_t coalesce_num)
 {
@@ -112,7 +101,7 @@ static inline void dr_checks_and_stats_on_bcasting_prepares(context_t *ctx,
   if (ENABLE_STAT_COUNTING) {
     t_stats[ctx->t_id].preps_sent +=
       coalesce_num;
-    t_stats[ctx->t_id].preps_sent_mes_num++;
+    t_stats[ctx->t_id].prep_sent_mes_num++;
   }
 }
 
