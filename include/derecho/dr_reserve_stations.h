@@ -19,11 +19,7 @@ static inline void fill_prep(context_t *ctx,
                              ctx_trace_op_t *op)
 {
   prep->key = op->key;
-  //prep->opcode = op->opcode;
-  //prep->val_len = op->val_len;
-  memcpy(prep->value, op->value, (size_t) VALUE_SIZE);
-  //prep->m_id = ctx->m_id;
-  //prep->sess_id = op->session_id;
+  memcpy(prep->value, op->value_to_write, (size_t) VALUE_SIZE);
   prep->g_id = assign_new_g_id(ctx);
   if (DEBUG_GID && (prep->g_id % M_2 == 0))
     printf("Wrkr %u assigned g_id %lu \n", ctx->t_id, prep->g_id);
