@@ -61,7 +61,7 @@ static inline void insert_in_local_w_rob_ptr(dr_ctx_t *dr_ctx, w_rob_t *w_rob)
   w_rob_t **loc_w_rob_ptr = (w_rob_t **) get_fifo_push_slot(dr_ctx->loc_w_rob_ptr);
   (*loc_w_rob_ptr) = w_rob;
   fifo_incr_push_ptr(dr_ctx->loc_w_rob_ptr);
-  fifo_incr_capacity(dr_ctx->loc_w_rob_ptr);
+  fifo_increm_capacity(dr_ctx->loc_w_rob_ptr);
 }
 
 

@@ -274,8 +274,6 @@ static inline bool prepare_handler(context_t *ctx)
   for (uint8_t prep_i = 0; prep_i < coalesce_num; prep_i++) {
     dr_check_prepare_and_print(ctx, prep_mes, prep_i);
     fill_dr_ctx_entry(ctx, prep_mes, prep_i);
-    //fifo_incr_push_ptr(dr_ctx->loc_w_rob_ptr);
-    //fifo_incr_capacity(dr_ctx->loc_w_rob_ptr);
   }
 
   if (ENABLE_ASSERTIONS) prep_mes->opcode = 0;
