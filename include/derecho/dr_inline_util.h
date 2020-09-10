@@ -23,30 +23,11 @@ static inline void dr_batch_from_trace_to_KVS(context_t *ctx)
 
   uint16_t op_i = 0;
   int working_session = -1;
-  // if there are clients the "all_sessions_stalled" flag is not used,
-  // so we need not bother checking it
-  if (!ENABLE_CLIENTS && dr_ctx->all_sessions_stalled) {
-    dr_ctx->stalled_sessions_dbg_counter++;
-    if (ENABLE_ASSERTIONS) {
-      if (dr_ctx->stalled_sessions_dbg_counter == MILLION) {
-        //my_printf(red, "Wrkr %u, all sessions are stalled \n", ctx->t_id);
-        dr_ctx->stalled_sessions_dbg_counter = 0;
-      }
-    }
+  if (all_sessions_are_stalled(ctx, dr_ctx->all_sessions_stalled,
+                               &dr_ctx->stalled_sessions_dbg_counter))
     return;
-  } else if (ENABLE_ASSERTIONS) dr_ctx->stalled_sessions_dbg_counter = 0;
-
-  for (uint16_t i = 0; i < SESSIONS_PER_THREAD; i++) {
-    uint16_t sess_i = (uint16_t)((dr_ctx->last_session + i) % SESSIONS_PER_THREAD);
-    if (pull_request_from_this_session(dr_ctx->stalled[sess_i], sess_i, ctx->t_id)) {
-      working_session = sess_i;
-      break;
-    }
-  }
-  if (ENABLE_CLIENTS) {
-    if (working_session == -1) return;
-  }
-  else if (ENABLE_ASSERTIONS) assert(working_session != -1);
+  if (!find_starting_session(ctx, dr_ctx->last_session,
+                             dr_ctx->stalled, &working_session)) return;
 
   bool passed_over_all_sessions = false;
 

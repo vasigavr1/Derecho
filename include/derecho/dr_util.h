@@ -101,7 +101,7 @@ static void dr_init_qp_meta(context_t *ctx)
   per_qp_meta_t *qp_meta = ctx->qp_meta;
 ///
   create_per_qp_meta(&qp_meta[PREP_QP_ID], MAX_PREP_WRS,
-                     MAX_RECV_PREP_WRS, SEND_BCAST_RECV_BCAST,  RECV_REQ,
+                     MAX_RECV_PREP_WRS, SEND_BCAST_RECV_BCAST, RECV_REQ,
                      ACK_QP_ID,
                      REM_MACH_NUM, REM_MACH_NUM, PREP_BUF_SLOTS,
                      PREP_RECV_SIZE, PREP_SEND_SIZE, ENABLE_MULTICAST, ENABLE_MULTICAST,
