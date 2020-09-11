@@ -1,4 +1,3 @@
-//
 // Created by vasilis on 20/08/20.
 //
 
@@ -12,10 +11,11 @@
 
 void dr_stats(stats_ctx_t *ctx);
 
-#define USE_LIN_READS 0
 #define DISABLE_UPDATING_KVS 0
 
 #define USE_QUORUM 1
+
+
 
 
 

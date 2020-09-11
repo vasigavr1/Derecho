@@ -19,7 +19,6 @@ static void dr_static_assert_compile_parameters()
   emphatic_print(green, "DERECHO");
   static_assert(PREP_SIZE == sizeof(dr_prepare_t));
   static_assert(PREP_SEND_SIZE == sizeof(dr_prep_mes_t));
-  static_assert(!USE_LIN_READS, "");
 }
 
 static void dr_init_globals()
