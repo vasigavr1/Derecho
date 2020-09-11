@@ -5,7 +5,7 @@
 #ifndef ODYSSEY_DR_CONFIG_H
 #define ODYSSEY_DR_CONFIG_H
 
-#include <fifo.h>
+#include "../../../odlib/include/fifo/fifo.h"
 #include <dr_messages.h>
 #include <network_context.h>
 
