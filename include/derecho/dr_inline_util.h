@@ -66,7 +66,7 @@ static inline void dr_batch_from_trace_to_KVS(context_t *ctx)
       signal_completion_to_client(ops[i].session_id, ops[i].index_to_req_array, ctx->t_id);
     }
     else { // WRITE
-      ctx_insert_mes(ctx, PREP_QP_ID, (uint32_t) PREP_SIZE, 1, false, &ops[i], LOCAL_PREP);
+      ctx_insert_mes(ctx, PREP_QP_ID, (uint32_t) PREP_SIZE, 1, false, &ops[i], LOCAL_PREP, 0);
     }
   }
 }
