@@ -152,36 +152,17 @@ static void* set_up_dr_ctx(context_t *ctx)
   }
 
   dr_ctx->gid_rob_arr = calloc(1, sizeof(gid_rob_arr_t));
-  //dr_ctx->gid_rob_arr->empty = true;
   dr_ctx->gid_rob_arr->gid_rob = calloc(GID_ROB_NUM, sizeof(gid_rob_t));
 
   uint32_t thread_offset =  (uint32_t) (ctx->t_id * PER_THREAD_G_ID_BATCH);
   for (int i = 0; i < GID_ROB_NUM; ++i) {
-    //dr_ctx->gid_rob_arr->gid_rob[i].w_rob = calloc(GID_ROB_SIZE, sizeof(w_rob_t*));
-    //for (int j = 0; j < GID_ROB_SIZE; ++j) {
-    //  dr_ctx->gid_rob_arr->gid_rob[i].w_rob[j] = &dr_ctx->w_rob[(i * GID_ROB_SIZE) + j];
-    //}
-
     dr_ctx->gid_rob_arr->gid_rob[i].base_gid =
       (i * PER_MACHINE_G_ID_BATCH) + thread_offset;
     dr_ctx->gid_rob_arr->gid_rob[i].valid = calloc(GID_ROB_SIZE, sizeof(bool));
     dr_ctx->gid_rob_arr->gid_rob[i].rob_id = (uint32_t) i;
     dr_ctx->gid_rob_arr->gid_rob[i].empty = true;
     //printf("Wrkr %u GIF_ROB %d: base = %lu \n", ctx->t_id, i, dr_ctx->gid_rob_arr[i].base_gid);
-
-
   }
-
-  //dr_ctx->ptrs_to_r = calloc(1, sizeof(ptrs_to_r_t));
-  //dr_ctx->ptrs_to_r->ptr_to_ops = malloc(LDR_MAX_INCOMING_R * sizeof(dr_read_t*));
-  //dr_ctx->ptrs_to_r->ptr_to_r_mes = malloc(LDR_MAX_INCOMING_R * sizeof(dr_r_mes_t*));
-  //dr_ctx->ptrs_to_r->coalesce_r_rep = malloc(LDR_MAX_INCOMING_R * sizeof(bool));
-  //
-  //dr_ctx->ack = (dr_ack_mes_t *) calloc(1, sizeof(dr_ack_mes_t));
-  //dr_ctx->ack->opcode = KVS_OP_ACK;
-  //dr_ctx->ack->m_id = ctx->m_id;
-  //dr_ctx->p_acks = (p_acks_t *) calloc(1, sizeof(p_acks_t));
-  //dr_ctx->r_rob = fifo_constructor(FLR_PENDING_READS, sizeof(r_rob_t), false, 0, 1);
 
 
   if (!ENABLE_CLIENTS)

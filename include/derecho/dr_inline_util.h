@@ -1,13 +1,12 @@
 //
 // Created by vasilis on 20/08/20.
 //
+#ifndef ODYSSEY_DR_INLINE_UTIL_H
+#define ODYSSEY_DR_INLINE_UTIL_H
 
 #include "network_context.h"
 #include "dr_reserve_stations.h"
 #include "dr_kvs_util.h"
-
-#ifndef ODYSSEY_DR_INLINE_UTIL_H
-#define ODYSSEY_DR_INLINE_UTIL_H
 
 /* ---------------------------------------------------------------------------
 //------------------------------TRACE --------------------------------
@@ -76,7 +75,6 @@ static inline void dr_batch_from_trace_to_KVS(context_t *ctx)
       ctx_insert_mes(ctx, PREP_QP_ID, (uint32_t) PREP_SIZE, 1, false, &ops[i], LOCAL_PREP);
     }
   }
-
 }
 
 //
@@ -365,7 +363,7 @@ static inline void send_prepares_helper(context_t *ctx)
 
 
 
-static inline void main_loop(context_t *ctx)
+static inline void dr_main_loop(context_t *ctx)
 {
   if (ctx->t_id == 0) my_printf(yellow, "Derecho main loop \n");
   while(true) {
