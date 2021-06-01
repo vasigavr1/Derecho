@@ -6,10 +6,10 @@
 #define ODYSSEY_DR_UTIL_H
 
 #include "dr_config.h"
-#include "network_context.h"
-#include "init_func.h"
+#include "od_network_context.h"
+#include "od_init_func.h"
 #include <dr_inline_util.h>
-#include "../../../odlib/include/trace/trace_util.h"
+#include "../../../odlib/include/trace/od_trace_util.h"
 
 atomic_uint_fast64_t global_w_id, committed_global_w_id;
 

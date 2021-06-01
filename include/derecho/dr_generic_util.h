@@ -6,7 +6,7 @@
 #define ODYSSEY_DR_GENERIC_UTIL_H
 
 #include "dr_config.h"
-#include "../../../odlib/include/network_api/network_context.h"
+#include "../../../odlib/include/network_api/od_network_context.h"
 
 static inline void print_g_id_rob(context_t *ctx, uint32_t rob_id);
 static inline void print_all_gid_robs(context_t *ctx, bool show_entries);

@@ -5,7 +5,7 @@
 #ifndef ODYSSEY_DR_KVS_UTIL_H
 #define ODYSSEY_DR_KVS_UTIL_H
 
-#include "kvs.h"
+#include "od_kvs.h"
 
 static inline void dr_KVS_batch_op_trace(dr_ctx_t *dr_ctx, uint16_t op_num,
                                          uint16_t t_id)

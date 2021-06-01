@@ -6,7 +6,7 @@
 #define ODYSSEY_DR_DEBUG_UTIL_H
 
 #include "dr_config.h"
-#include "../../../odlib/include/network_api/network_context.h"
+#include "../../../odlib/include/network_api/od_network_context.h"
 #include "dr_generic_util.h"
 
 static inline char* dr_w_state_to_str(w_state_t state)

@@ -4,7 +4,7 @@
 #ifndef ODYSSEY_DR_INLINE_UTIL_H
 #define ODYSSEY_DR_INLINE_UTIL_H
 
-#include "network_context.h"
+#include "od_network_context.h"
 #include "dr_reserve_stations.h"
 #include "dr_kvs_util.h"
 

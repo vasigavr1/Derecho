@@ -8,10 +8,10 @@
 
 
 //#include "latency_util.h"
-#include "generic_inline_util.h"
+#include "od_generic_inline_util.h"
 #include "dr_debug_util.h"
 
-#include <inline_util.h>
+#include <od_inline_util.h>
 
 
 static inline void fill_prep(context_t *ctx,

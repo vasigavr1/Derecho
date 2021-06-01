@@ -4,9 +4,9 @@
 #ifndef ODYSSEY_DR_CONFIG_H
 #define ODYSSEY_DR_CONFIG_H
 
-#include "../../../odlib/include/fifo/fifo.h"
+#include "od_fifo.h"
 #include <dr_messages.h>
-#include <network_context.h>
+#include <od_network_context.h>
 
 
 void dr_stats(stats_ctx_t *ctx);
