@@ -25,8 +25,8 @@ static inline void dr_batch_from_trace_to_KVS(context_t *ctx)
   if (all_sessions_are_stalled(ctx, dr_ctx->all_sessions_stalled,
                                &dr_ctx->stalled_sessions_dbg_counter))
     return;
-  if (!find_starting_session(ctx, dr_ctx->last_session,
-                             dr_ctx->stalled, &working_session)) return;
+  if (!od_find_starting_session(ctx, dr_ctx->last_session,
+                                dr_ctx->stalled, &working_session)) return;
 
   bool passed_over_all_sessions = false;
 
