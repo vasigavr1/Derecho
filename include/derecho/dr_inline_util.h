@@ -33,14 +33,14 @@ static inline void dr_batch_from_trace_to_KVS(context_t *ctx)
   /// main loop
   while (op_i < DR_TRACE_BATCH && !passed_over_all_sessions) {
 
-    ctx_fill_trace_op(ctx, &trace[dr_ctx->trace_iter], &ops[op_i], working_session);
+    od_fill_trace_op(ctx, &trace[dr_ctx->trace_iter], &ops[op_i], working_session);
     dr_ctx->stalled[working_session] = ops[op_i].opcode == KVS_OP_PUT;
 
     passed_over_all_sessions =
-      ctx_find_next_working_session(ctx, &working_session,
-                                    dr_ctx->stalled,
-                                    dr_ctx->last_session,
-                                    &dr_ctx->all_sessions_stalled);
+        od_find_next_working_session(ctx, &working_session,
+                                     dr_ctx->stalled,
+                                     dr_ctx->last_session,
+                                     &dr_ctx->all_sessions_stalled);
     resp[op_i].type = EMPTY;
     if (!ENABLE_CLIENTS) {
       dr_ctx->trace_iter++;
@@ -66,7 +66,7 @@ static inline void dr_batch_from_trace_to_KVS(context_t *ctx)
       signal_completion_to_client(ops[i].session_id, ops[i].index_to_req_array, ctx->t_id);
     }
     else { // WRITE
-      ctx_insert_mes(ctx, PREP_QP_ID, (uint32_t) PREP_SIZE, 1, false, &ops[i], LOCAL_PREP, 0);
+      od_insert_mes(ctx, PREP_QP_ID, (uint32_t) PREP_SIZE, 1, false, &ops[i], LOCAL_PREP, 0);
     }
   }
 }
@@ -368,7 +368,7 @@ static inline void dr_main_loop(context_t *ctx)
 
     ctx_poll_incoming_messages(ctx, PREP_QP_ID);
 
-    ctx_send_acks(ctx, ACK_QP_ID);
+    od_send_acks(ctx, ACK_QP_ID);
 
     ctx_poll_incoming_messages(ctx, ACK_QP_ID);
 

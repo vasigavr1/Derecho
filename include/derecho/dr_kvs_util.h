@@ -35,7 +35,7 @@ static inline void dr_KVS_batch_op_trace(dr_ctx_t *dr_ctx, uint16_t op_num,
   //uint32_t r_push_ptr = dr_ctx->r_rob->push_ptr;
   // the following variables used to validate atomicity between a lock-free read of an object
   for(op_i = 0; op_i < op_num; op_i++) {
-    KVS_check_key(kv_ptr[op_i], op[op_i].key, op_i);
+    od_KVS_check_key(kv_ptr[op_i], op[op_i].key, op_i);
     if (op[op_i].opcode == KVS_OP_GET ) {
       KVS_local_read(kv_ptr[op_i], op[op_i].value_to_read, &resp[op_i].type, t_id);
     }
