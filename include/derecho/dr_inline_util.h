@@ -93,7 +93,7 @@ static inline void dr_propagate_updates(context_t *ctx)
   uint16_t sess_to_free[SESSIONS_PER_THREAD];
   uint16_t update_op_i = 0, local_op_i = 0;
   // remember the starting point to use it when writing the KVS
-  uint64_t committed_g_id = atomic_load_explicit(&committed_global_w_id, memory_order_relaxed);
+  uint64_t committed_g_id = (uint64_t) atomic_load_explicit(&committed_global_w_id, memory_order_relaxed);
   dr_increase_counter_if_waiting_for_commit(dr_ctx, committed_g_id, ctx->t_id);
   while(!get_g_id_rob_pull(dr_ctx)->empty) {
     w_rob_t *w_rob = get_w_rob_from_g_rob_pull(dr_ctx);
@@ -157,7 +157,6 @@ static inline void dr_insert_commits_on_receiving_ack(context_t *ctx)
     if (dr_ctx->loc_w_rob_ptr->capacity == 0) break;
     w_rob = *(w_rob_t **) get_fifo_pull_slot(dr_ctx->loc_w_rob_ptr);
   }
-
   ctx_insert_commit(ctx, COM_QP_ID, com_num, dr_ctx->committed_w_id);
   dr_ctx->committed_w_id += com_num;
 }
@@ -181,7 +180,7 @@ static inline void dr_apply_acks(context_t *ctx,
 
     w_rob_t *w_rob = *(w_rob_t **) get_fifo_slot(dr_ctx->loc_w_rob_ptr, ack_ptr);
     w_rob->acks_seen++;
-    if (w_rob->acks_seen == QUORUM_NUM) {
+    if (w_rob->acks_seen == REMOTE_QUORUM) {
       if (ENABLE_ASSERTIONS) qp_meta->outstanding_messages--;
 //        printf("Worker %d valid ack %u/%u write at ptr %d with g_id %lu is ready \n",
 //               t_id, ack_i, ack_num,  ack_ptr, dr_ctx->g_id[ack_ptr]);

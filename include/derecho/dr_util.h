@@ -45,21 +45,13 @@ static void dr_qp_meta_mfs(context_t *ctx)
   mfs[PREP_QP_ID].recv_handler = prepare_handler;
   mfs[PREP_QP_ID].send_helper = send_prepares_helper;
   mfs[PREP_QP_ID].insert_helper = insert_prep_help;
-  //mfs[PREP_QP_ID].polling_debug = dr_debug_info_bookkeep;
+
 
   mfs[ACK_QP_ID].recv_handler = ack_handler;
+  mfs[ACK_QP_ID].send_helper = send_acks_helper;
 
   mfs[COM_QP_ID].recv_handler = dr_commit_handler;
   mfs[COM_QP_ID].send_helper = dr_send_commits_helper;
-  //mfs[COMMIT_W_QP_ID].polling_debug = dr_debug_info_bookkeep;
-  //
-  //mfs[R_QP_ID].recv_handler = r_handler;
-  mfs[ACK_QP_ID].send_helper = send_acks_helper;
-  //mfs[R_QP_ID].recv_kvs = dr_KVS_batch_op_reads;
-  //mfs[R_QP_ID].insert_helper = insert_r_rep_help;
-  //mfs[R_QP_ID].polling_debug = dr_debug_info_bookkeep;
-
-
 
   ctx_set_qp_meta_mfs(ctx, mfs);
   free(mfs);
