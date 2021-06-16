@@ -51,7 +51,7 @@ static inline void dr_batch_from_trace_to_KVS(context_t *ctx)
   //printf("Session %u pulled: ops %u, req_array ptr %u \n",
   //       working_session, op_i, ops[0].index_to_req_array);
   dr_ctx->last_session = (uint16_t) working_session;
-  t_stats[ctx->t_id].cache_hits_per_thread += op_i;
+  t_stats[ctx->t_id].total_reqs += op_i;
   dr_KVS_batch_op_trace(dr_ctx, op_i, ctx->t_id);
 
   for (uint16_t i = 0; i < op_i; i++) {

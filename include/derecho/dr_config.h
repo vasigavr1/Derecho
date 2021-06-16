@@ -175,7 +175,7 @@ typedef struct dr_ctx {
 
 
 typedef struct thread_stats { // 2 cache lines
-  long long cache_hits_per_thread;
+  long long total_reqs;
   long long remotes_per_client;
   long long locals_per_client;
 

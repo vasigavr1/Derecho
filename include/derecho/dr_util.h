@@ -175,7 +175,7 @@ typedef struct stats {
   double stalled_com_credit[WORKERS_PER_MACHINE];
 
 
-  double cache_hits_per_thread[WORKERS_PER_MACHINE];
+  double total_reqs[WORKERS_PER_MACHINE];
 
 
   double preps_sent[WORKERS_PER_MACHINE];
